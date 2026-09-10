@@ -1,51 +1,64 @@
 ---
 title: "제품 선택"
-description: "Data Relay Link만 필요한지, Data Relay Control까지 필요한지 판단합니다."
+description: "필요한 것이 안전한 연결인지, 엔터프라이즈 데이터 흐름 제어인지, 둘 다인지 판단합니다."
 ---
 
 # 제품 선택
 
-먼저 해결하려는 연결 문제부터 판단하면 됩니다.
+먼저 **무엇을 전달하고 제어해야 하는지**부터 판단하면 됩니다.
 
 ```mermaid
 flowchart TD
-    A[무엇이 필요한가?]
-    B{외부에서 사설 서비스를\n접속해야 하는가?}
-    C{제한망 호스트가 허용된\n인터넷 목적지에 접속해야 하는가?}
-    D{여러 Data Relay 환경을\n중앙 관리해야 하는가?}
-    L[Data Relay Link 사용]
-    LC[Data Relay Link + Data Relay Control]
+    A[무엇을 이동해야 하는가?]
+    B{Network Connection인가?}
+    C{Enterprise Event / Record인가?}
+    L[Data Relay Link]
+    D[Data Relay Control]
+    BOTH[두 제품을 독립적으로 사용]
 
     A --> B
     B -->|예| L
     B -->|아니오| C
-    C -->|예| L
-    C -->|아니오| D
-    D -->|예| LC
-    D -->|아니오| L
-    L --> D
-    D -->|예| LC
+    C -->|예| D
+    C -->|아니오| A
+    L --> Q{Enterprise 데이터 수집/전달도 필요한가?}
+    Q -->|예| BOTH
+    Q -->|아니오| L
+    D --> R{사설 서비스 연결/Controlled Egress도 필요한가?}
+    R -->|예| BOTH
+    R -->|아니오| D
 ```
 
-## Data Relay Link
+## Data Relay Link — 연결 문제가 중심일 때
 
-즉시 필요한 것이 **연결**이라면 Data Relay Link부터 사용합니다.
+**Data Relay Link**는 좁고 명시적인 Connection을 만들어야 할 때 사용합니다.
 
-- 사설망의 SSH, HTTP/HTTPS 또는 선택된 TCP 서비스를 공개해야 한다.
-- 각 원격 클라이언트에 inbound NAT를 설정하고 싶지 않다.
-- 제한망 호스트에 허용된 HTTP/HTTPS egress만 제공하고 싶다.
-- 소규모 환경을 직접 관리하면 충분하다.
+- NAT/방화벽 뒤의 SSH, HTTP/HTTPS 또는 선택된 TCP 서비스에 접근
+- 각 원격 클라이언트마다 inbound NAT를 구성하지 않고 원격 접속
+- 제한망 호스트가 허용된 HTTP/HTTPS 목적지에만 접근
+- 연결 범위를 명시적으로 제한하고 로컬에서 enforcement
 
 [Data Relay Link 문서로 이동](https://link.datarelay.run)
 
-## Data Relay Control
+## Data Relay Control — 엔터프라이즈 데이터 흐름이 중심일 때
 
-여러 Data Relay 배포를 하나의 관리/정책 계층에서 운영해야 한다면 **Data Relay Control**을 추가합니다.
+**Data Relay Control**은 엔터프라이즈 데이터를 수집하고 처리·거버넌스·전달해야 할 때 사용합니다.
 
-실제 설계 전에 Control 전용 문서에서 현재 구현된 기능을 확인하세요.
+- Connector, Credential, Source, Stream, Route, Destination 구성
+- Source event를 fetch하거나 webhook 등으로 수신
+- 하나의 Stream을 여러 Destination으로 Route
+- 목적지별 Transform, Protection, Classification, Policy 적용
+- runtime evidence, delivery outcome, health, audit 모니터링
+- backup/restore 등 lifecycle 운영
 
 [Data Relay Control 문서로 이동](https://control.datarelay.run)
 
-## 일반적인 시작 방법
+## 두 제품이 모두 필요한 경우
 
-대부분의 소규모 환경은 **Data Relay Link부터 시작**하는 것이 좋습니다. 중앙 가시성, 공통 정책, 통합 관리가 실제 운영 요구사항이 되었을 때 **Data Relay Control**을 추가합니다.
+연결 문제와 엔터프라이즈 데이터 흐름 문제가 동시에 있다면 두 제품을 함께 배포할 수 있습니다.
+
+다만 현재는 **서로 독립적인 제품**으로 봐야 합니다. Data Relay Control은 현재 제품 간 관리 프로토콜을 통해 Data Relay Link를 등록·모니터링·설정·동기화하지 않습니다.
+
+<Note>
+  설치 방법, stable/development 릴리스 상태, 보안 경계, 정확한 구현 범위는 Link와 Control 각 전용 문서가 기준입니다.
+</Note>
