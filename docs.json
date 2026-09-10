@@ -1,0 +1,104 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Data Relay",
+  "description": "Secure connectivity for isolated and restricted networks with Data Relay Link and Data Relay Control.",
+  "colors": {
+    "primary": "#16A34A"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Link Docs",
+        "href": "https://link.datarelay.run"
+      },
+      {
+        "label": "Control Docs",
+        "href": "https://control.datarelay.run"
+      },
+      {
+        "type": "github",
+        "href": "https://github.com/datarelay-labs"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Choose a Product",
+      "href": "/getting-started/choose-a-product"
+    }
+  },
+  "search": {
+    "prompt": "Search Data Relay docs..."
+  },
+  "seo": {
+    "indexing": "navigable",
+    "metatags": {
+      "canonical": "https://datarelay.run"
+    }
+  },
+  "metadata": {
+    "timestamp": true
+  },
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "groups": [
+          {
+            "group": "Data Relay",
+            "icon": "network-wired",
+            "pages": [
+              "index",
+              "platform/overview",
+              "platform/architecture",
+              "platform/link-vs-control"
+            ]
+          },
+          {
+            "group": "Getting Started",
+            "icon": "route",
+            "pages": [
+              "getting-started/choose-a-product"
+            ]
+          },
+          {
+            "group": "Reference",
+            "icon": "circle-info",
+            "pages": [
+              "reference/product-status"
+            ]
+          }
+        ]
+      },
+      {
+        "language": "ko",
+        "groups": [
+          {
+            "group": "Data Relay",
+            "icon": "network-wired",
+            "pages": [
+              "ko/index",
+              "ko/platform/overview",
+              "ko/platform/architecture",
+              "ko/platform/link-vs-control"
+            ]
+          },
+          {
+            "group": "시작하기",
+            "icon": "route",
+            "pages": [
+              "ko/getting-started/choose-a-product"
+            ]
+          },
+          {
+            "group": "참고",
+            "icon": "circle-info",
+            "pages": [
+              "ko/reference/product-status"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
