@@ -1,37 +1,52 @@
 ---
 title: "Data Relay Link vs Data Relay Control"
-description: "Choose the right Data Relay product for connectivity, centralized management, and policy."
+description: "Choose between secure connectivity and enterprise data-flow control."
 ---
 
 # Data Relay Link vs Data Relay Control
 
-The products are complementary, not interchangeable.
+The products share the Data Relay name, but they solve different problems.
 
 | Question | Data Relay Link | Data Relay Control |
 | --- | --- | --- |
-| What is its main job? | Connectivity and local enforcement | Centralized management and policy |
-| Can it be used by itself? | **Yes** | Used with managed Data Relay environments |
-| Handles Secure Remote Access? | **Yes** | Manages relevant policy/visibility where supported |
-| Handles Controlled Egress? | **Yes** | Manages relevant policy/visibility where supported |
-| Carries application traffic? | **Yes** | Not the primary role |
-| Best fit | Small standalone or site-level connectivity | Central administration across Data Relay deployments |
+| Main job | Secure connectivity | Enterprise data collection, processing, governance, and delivery |
+| Primary unit | Connection | Event / record |
+| Secure Remote Access | **Yes** | No |
+| Controlled web egress | **Yes** | No |
+| Source data collection | No | **Yes** |
+| Stream / Route execution | No | **Yes** |
+| Transform / Protection / Classification / Policy | No | **Yes** |
+| Multi-destination delivery | No | **Yes** |
+| Local users / RBAC / operational UI | Product-local management | **Yes** |
+| Carries runtime data | Relays connections | **Processes and delivers records** |
+| Can be deployed independently | **Yes** | **Yes** |
+| Centrally manages the other product today | No | **No — Link integration is not implemented** |
 | Detailed docs | [link.datarelay.run](https://link.datarelay.run) | [control.datarelay.run](https://control.datarelay.run) |
 
-## Use Link only when
+## Choose Data Relay Link when
 
-- you have one site or a small number of systems;
-- you need Secure Remote Access;
-- you need narrowly controlled outbound Internet access;
-- local CLI/policy operation is sufficient;
-- you do not need a centralized management plane.
+- a private service must be reachable from outside without broad VPN connectivity;
+- a restricted host needs access only to approved Internet destinations;
+- you need selected SSH, HTTP/HTTPS, or other TCP publication;
+- the problem is primarily **network reachability and connection control**.
 
-## Add Control when
+## Choose Data Relay Control when
 
-- multiple Data Relay deployments need one management view;
-- policy should be managed centrally;
-- centralized operational visibility is required;
-- administrators need a shared management surface rather than operating every Link independently.
+- enterprise data must be collected from APIs, webhooks, database sources, or other supported connectors;
+- one source flow must be delivered to multiple destinations;
+- destinations need different Transform or governance processing;
+- operators need Streams, Routes, delivery evidence, audit, backup, and policy/governance surfaces;
+- the problem is primarily **data movement, processing, and delivery control**.
 
-<Note>
-  The Data Relay Control implementation and release status are documented separately. This platform portal intentionally avoids claiming Control features that are not confirmed in its current product documentation.
-</Note>
+## Use both when both problems exist
+
+An organization may need both products, but that does not currently make them one integrated control hierarchy.
+
+For example:
+
+- **Link** can solve remote/private connectivity requirements for operational systems.
+- **Control** can independently collect and route enterprise data to multiple destinations.
+
+<Warning>
+  Do not design around Data Relay Control centrally managing Data Relay Link today. The current Control implementation does not provide Link registration, heartbeat, policy delivery, or state synchronization.
+</Warning>
