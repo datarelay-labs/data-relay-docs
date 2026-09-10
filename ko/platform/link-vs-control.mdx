@@ -1,0 +1,37 @@
+---
+title: "Data Relay Link vs Data Relay Control"
+description: "연결과 중앙 관리/정책 요구사항에 따라 적합한 Data Relay 제품을 선택합니다."
+---
+
+# Data Relay Link vs Data Relay Control
+
+두 제품은 서로 대체하는 제품이 아니라 역할이 다른 보완 제품입니다.
+
+| 질문 | Data Relay Link | Data Relay Control |
+| --- | --- | --- |
+| 주요 역할 | 연결 및 로컬 enforcement | 중앙 관리 및 정책 |
+| 단독 사용 가능? | **예** | 관리 대상 Data Relay 환경과 함께 사용 |
+| Secure Remote Access | **예** | 지원 범위에서 관련 정책/가시성 관리 |
+| Controlled Egress | **예** | 지원 범위에서 관련 정책/가시성 관리 |
+| 애플리케이션 트래픽 전달 | **예** | 주 역할이 아님 |
+| 적합한 환경 | 소규모 독립 또는 사이트 단위 연결 | 여러 Data Relay 배포의 중앙 관리 |
+| 상세 문서 | [link.datarelay.run](https://link.datarelay.run) | [control.datarelay.run](https://control.datarelay.run) |
+
+## Link만 사용하면 되는 경우
+
+- 한 사이트 또는 소수 시스템을 관리한다.
+- Secure Remote Access가 필요하다.
+- 제한된 outbound Internet access가 필요하다.
+- 로컬 CLI와 정책 운영으로 충분하다.
+- 별도의 중앙 관리 계층이 필요하지 않다.
+
+## Control을 추가할 경우
+
+- 여러 Data Relay 환경을 한 화면에서 관리해야 한다.
+- 정책을 중앙에서 관리해야 한다.
+- 중앙 운영 가시성이 필요하다.
+- 각 Link를 개별 운영하는 대신 공통 관리 계층이 필요하다.
+
+<Note>
+  Data Relay Control의 실제 구현 및 릴리스 상태는 별도 Control 문서가 기준입니다. 이 통합 포털에서는 확인되지 않은 Control 기능을 지원한다고 가정하지 않습니다.
+</Note>
