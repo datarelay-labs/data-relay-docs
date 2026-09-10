@@ -1,21 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Data Relay",
-  "description": "Two independent products under the Data Relay name: Link for controlled bidirectional connectivity and Control for enterprise data brokering and delivery.",
+  "name": "DataRelay Labs",
+  "description": "A central portal for DataRelay Labs projects, product documentation, and practical open-source data relay engineering.",
   "colors": {
     "primary": "#16A34A"
   },
   "navbar": {
     "links": [
-      {
-        "label": "Link Docs",
-        "href": "https://link.datarelay.run"
-      },
-      {
-        "label": "Control Docs",
-        "href": "https://control.datarelay.run"
-      },
       {
         "type": "github",
         "href": "https://github.com/datarelay-labs"
@@ -23,12 +15,12 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Explore Products",
-      "href": "/getting-started/choose-a-product"
+      "label": "Browse Projects",
+      "href": "/projects"
     }
   },
   "search": {
-    "prompt": "Search Data Relay docs..."
+    "prompt": "Search DataRelay Labs..."
   },
   "seo": {
     "indexing": "navigable",
@@ -45,27 +37,14 @@
         "language": "en",
         "groups": [
           {
-            "group": "Data Relay",
-            "icon": "network-wired",
+            "group": "DataRelay Labs",
+            "icon": "grid-2",
             "pages": [
               "index",
-              "platform/overview",
-              "platform/architecture",
-              "platform/link-vs-control"
-            ]
-          },
-          {
-            "group": "Getting Started",
-            "icon": "route",
-            "pages": [
-              "getting-started/choose-a-product"
-            ]
-          },
-          {
-            "group": "Reference",
-            "icon": "circle-info",
-            "pages": [
-              "reference/product-status"
+              "choose-project",
+              "projects",
+              "project-map",
+              "principles"
             ]
           }
         ]
@@ -74,27 +53,14 @@
         "language": "ko",
         "groups": [
           {
-            "group": "Data Relay",
-            "icon": "network-wired",
+            "group": "DataRelay Labs",
+            "icon": "grid-2",
             "pages": [
               "ko/index",
-              "ko/platform/overview",
-              "ko/platform/architecture",
-              "ko/platform/link-vs-control"
-            ]
-          },
-          {
-            "group": "시작하기",
-            "icon": "route",
-            "pages": [
-              "ko/getting-started/choose-a-product"
-            ]
-          },
-          {
-            "group": "참고",
-            "icon": "circle-info",
-            "pages": [
-              "ko/reference/product-status"
+              "ko/project-map",
+              "ko/choose-project",
+              "ko/projects",
+              "ko/principles"
             ]
           }
         ]
