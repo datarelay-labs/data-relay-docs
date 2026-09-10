@@ -1,0 +1,37 @@
+---
+title: "Data Relay Link vs Data Relay Control"
+description: "Choose the right Data Relay product for connectivity, centralized management, and policy."
+---
+
+# Data Relay Link vs Data Relay Control
+
+The products are complementary, not interchangeable.
+
+| Question | Data Relay Link | Data Relay Control |
+| --- | --- | --- |
+| What is its main job? | Connectivity and local enforcement | Centralized management and policy |
+| Can it be used by itself? | **Yes** | Used with managed Data Relay environments |
+| Handles Secure Remote Access? | **Yes** | Manages relevant policy/visibility where supported |
+| Handles Controlled Egress? | **Yes** | Manages relevant policy/visibility where supported |
+| Carries application traffic? | **Yes** | Not the primary role |
+| Best fit | Small standalone or site-level connectivity | Central administration across Data Relay deployments |
+| Detailed docs | [link.datarelay.run](https://link.datarelay.run) | [control.datarelay.run](https://control.datarelay.run) |
+
+## Use Link only when
+
+- you have one site or a small number of systems;
+- you need Secure Remote Access;
+- you need narrowly controlled outbound Internet access;
+- local CLI/policy operation is sufficient;
+- you do not need a centralized management plane.
+
+## Add Control when
+
+- multiple Data Relay deployments need one management view;
+- policy should be managed centrally;
+- centralized operational visibility is required;
+- administrators need a shared management surface rather than operating every Link independently.
+
+<Note>
+  The Data Relay Control implementation and release status are documented separately. This platform portal intentionally avoids claiming Control features that are not confirmed in its current product documentation.
+</Note>
