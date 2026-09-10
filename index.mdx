@@ -1,111 +1,145 @@
 ---
 title: "Data Relay"
-description: "Secure connectivity for isolated and restricted networks."
+description: "Secure connectivity and enterprise data-flow control with Data Relay Link and Data Relay Control."
 ---
 
 # Data Relay
 
-**Connect only what is needed — without turning an isolated environment into a fully connected network.**
+**Relay only what matters — a connection when a system needs access, or data when an enterprise workflow needs delivery.**
 
-Data Relay is a lightweight connectivity platform for restricted, private, and isolated environments. It is organized around two products with clearly separated roles:
+Data Relay is a product family with two distinct products:
 
-- **Data Relay Link** — connectivity for Secure Remote Access and Controlled Egress.
-- **Data Relay Control** — centralized management and policy for Data Relay environments.
+- **Data Relay Link** — secure connectivity for private, NATed, firewalled, and restricted environments.
+- **Data Relay Control** — an Enterprise Data Control Gateway that collects, processes, protects, and delivers data to one or more destinations.
 
 <Note>
-  Data Relay is designed to keep connectivity narrow and explicit. It is not intended to become a general-purpose VPN, full RMM platform, or large SASE stack.
+  Link and Control share the Data Relay product family, but they currently solve different problems and run different data paths. Data Relay Control is **not currently a centralized manager for Data Relay Link**; the current Control implementation has no Link registration, heartbeat, policy-delivery, or state-synchronization protocol.
 </Note>
 
 ## Understand the platform in 30 seconds
 
 ```mermaid
 flowchart TB
-    O[Administrator / Support Engineer]
-    C[Data Relay Control\nManagement & Policy]
-    L1[Data Relay Link\nSite A]
-    L2[Data Relay Link\nSite B]
-    P1[Private systems\nbehind NAT/firewall]
-    P2[Restricted systems\ninside isolated network]
-    I[Approved Internet destinations]
+    DR[Data Relay]
 
-    O --> C
-    C -. management / policy .-> L1
-    C -. management / policy .-> L2
-    L1 --> P1
-    L2 --> P2
-    P2 -->|Controlled Egress| I
+    DR --> L[Data Relay Link\nSecure Connectivity]
+    DR --> C[Data Relay Control\nEnterprise Data Control Gateway]
+
+    RU[Remote user / support tool] -->|Secure Remote Access| L
+    RH[Restricted host] -->|Controlled Egress| L
+    L --> PS[Private service]
+    L --> AI[Approved Internet destination]
+
+    S[Enterprise data sources] --> C
+    C --> R[Stream → Routes\nTransform / Protect / Classify / Policy]
+    R --> D1[Destination A]
+    R --> D2[Destination B]
 ```
 
-## Choose the product you need
+## Choose the product for the job
 
 <CardGroup cols={2}>
   <Card title="Data Relay Link" icon="link" href="https://link.datarelay.run">
-    Secure Remote Access and Controlled Egress for systems behind NAT, firewalls, or restricted outbound policies.
+    Connect selected private services to authorized remote users, or give restricted hosts narrowly controlled HTTP/HTTPS egress.
   </Card>
 
   <Card title="Data Relay Control" icon="sliders" href="https://control.datarelay.run">
-    Centralized management, policy, visibility, and operations for Data Relay environments.
+    Collect enterprise data, process it per route, apply optional protection and policy, and deliver it to one or many destinations.
   </Card>
 </CardGroup>
 
-## Two connectivity directions
+## Data Relay Link
 
-### Secure Remote Access
+**Connection relay for restricted networks**
 
-Outside → inside
+Data Relay Link focuses on making a specific connection possible without broadly connecting entire networks.
 
-```mermaid
-flowchart LR
-    U[Support engineer] -->|approved published service| L[Data Relay Link]
-    L --> H[Private host / service]
-```
-
-Use this when a remote system is behind NAT or a firewall and support staff need controlled access to SSH, HTTP/HTTPS, or another published TCP service without first building a VPN path.
-
-### Controlled Egress
-
-Inside → approved Internet destinations
+- **Secure Remote Access** — publish selected SSH, HTTP/HTTPS, or other TCP services from systems behind NAT or firewalls.
+- **Controlled Egress** — allow restricted hosts to reach approved FQDN/port combinations through an HTTP/HTTPS proxy with default-deny behavior.
+- **Small standalone operation** — designed for focused deployments that can be managed directly without a separate central controller.
 
 ```mermaid
 flowchart LR
-    H[Restricted host] -->|HTTP / HTTPS proxy| L[Data Relay Link]
-    L -->|policy allows| A[Approved FQDN / port]
-    L -. deny by default .-> X[Other destinations]
+    U[Outside user] -->|approved service| L[Data Relay Link]
+    L --> H[Private host]
+    R[Restricted host] -->|approved HTTP/HTTPS| L
+    L --> I[Approved Internet destination]
 ```
 
-Use this when a restricted host needs narrowly controlled outbound Internet access without opening broad network connectivity.
+[Explore Data Relay Link](https://link.datarelay.run)
+
+## Data Relay Control
+
+**Enterprise data collection, processing, governance, and delivery**
+
+Data Relay Control sits directly in the enterprise data path. It is not only a configuration plane: the runtime fetches or receives events, processes them, delivers them, and advances source checkpoints according to delivery outcomes.
+
+Its core model is:
+
+```text
+One Stream → Many Routes → Many Destinations
+```
+
+Each Route can apply destination-specific processing such as:
+
+```text
+Transform → Protection → Classification → Policy → Delivery
+```
+
+The current product also includes local users/RBAC, connectors and credentials, source/stream/route/destination management, runtime evidence, audit, backup/restore, and newer Marketplace and safe-change capabilities on the audited development branch.
+
+```mermaid
+flowchart LR
+    S[Source] --> ST[Stream]
+    ST --> R1[Route A]
+    ST --> R2[Route B]
+    R1 --> D1[Destination A]
+    R2 --> D2[Destination B]
+```
+
+[Explore Data Relay Control](https://control.datarelay.run)
 
 ## Product responsibilities
 
 | Area | Data Relay Link | Data Relay Control |
 | --- | --- | --- |
-| Secure Remote Access | **Yes** | Central management / policy role |
-| Controlled Egress | **Yes** | Central management / policy role |
-| Local connectivity enforcement | **Yes** | No direct data-path role implied |
-| Centralized visibility | Local scope | **Primary role** |
-| Central policy management | Local policy support | **Primary role** |
-| Small standalone deployment | **Yes** | Optional |
+| Primary purpose | Secure connectivity | Enterprise data-flow control and delivery |
+| Main data path | Connections | Events / records |
+| Remote access to private services | **Yes** | No |
+| Controlled outbound web access | **Yes** | No |
+| Collect enterprise source data | No | **Yes** |
+| Transform / protect / classify / policy-process data | No | **Yes** |
+| Multi-destination delivery | No | **Yes** |
+| Carries data in its own runtime | Connection relay | **Yes — active processing and delivery runtime** |
+| Standalone use | **Yes** | **Yes** |
+| Current Link↔Control management integration | Not required | **Not implemented** |
 
-<Warning>
-  Data Relay Control capabilities are documented separately and may evolve independently from Data Relay Link. Refer to the Control documentation for the current implemented feature set and release status.
-</Warning>
+## How the products relate today
+
+The products belong to the same Data Relay family, but the current implementations should be deployed and evaluated independently.
+
+- Use **Link** for connectivity problems.
+- Use **Control** for enterprise data collection, processing, governance, and delivery problems.
+- Do **not** assume that deploying Control automatically centralizes Link administration today.
+
+Future integration may be added only when it exists in the implementation and is documented by both products.
 
 ## Start here
 
 <CardGroup cols={2}>
   <Card title="Choose a Product" icon="route" href="/getting-started/choose-a-product">
-    Decide whether you need Link only or centralized Control.
+    Start from the problem you need to solve: connectivity or enterprise data flow.
   </Card>
 
   <Card title="Platform Architecture" icon="sitemap" href="/platform/architecture">
-    Understand the separation between connectivity, management, policy, and data paths.
+    See the two independent data paths and where each product sits.
   </Card>
 
   <Card title="Link vs Control" icon="scale-balanced" href="/platform/link-vs-control">
-    Compare the two products by responsibility and deployment model.
+    Compare responsibilities, runtime behavior, and deployment fit side by side.
   </Card>
 
   <Card title="Product Status" icon="circle-info" href="/reference/product-status">
-    See what is stable, under qualification, or documented elsewhere.
+    Check release boundaries and the authoritative product-specific documentation.
   </Card>
 </CardGroup>
