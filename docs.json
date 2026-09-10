@@ -57,9 +57,9 @@
             "icon": "grid-2",
             "pages": [
               "ko/index",
-              "ko/project-map",
               "ko/choose-project",
               "ko/projects",
+              "ko/project-map",
               "ko/principles"
             ]
           }
