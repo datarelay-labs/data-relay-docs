@@ -1,58 +1,102 @@
 ---
 title: "Platform Architecture"
-description: "See how Data Relay separates connectivity, policy, management, and traffic paths."
+description: "See the independent runtime paths of Data Relay Link and Data Relay Control."
 ---
 
 # Platform Architecture
 
-Data Relay separates the **connectivity/data path** from the **management and policy plane**.
+Data Relay currently contains two independent runtime paths under one product family.
 
 ```mermaid
 flowchart TB
-    A[Administrator]
-    C[Data Relay Control\nManagement & Policy Plane]
-    L[Data Relay Link\nConnectivity & Enforcement]
-    R[Remote user / support tool]
-    P[Private system / service]
-    E[Approved Internet destination]
+    DR[Data Relay]
 
-    A --> C
-    C -. configuration / policy / visibility .-> L
-    R -->|Secure Remote Access| L
-    L --> P
-    P -->|Controlled Egress| L
-    L --> E
+    DR --> L[Data Relay Link]
+    DR --> C[Data Relay Control]
+
+    RU[Remote user / support tool] -->|Secure Remote Access| L
+    RH[Restricted host] -->|Controlled Egress| L
+    L --> PS[Private service]
+    L --> AI[Approved Internet destination]
+
+    SRC[Enterprise source] --> C
+    C --> OBS[Extraction / Schema Observation]
+    OBS --> RA[Route A]
+    OBS --> RB[Route B]
+    RA --> PA[Transform → Protection → Classification → Policy → Delivery]
+    RB --> PB[Transform → Protection → Classification → Policy → Delivery]
+    PA --> DA[Destination A]
+    PB --> DB[Destination B]
 ```
 
-## Connectivity layer
+## Data Relay Link path
 
-**Data Relay Link** owns the connectivity function. Depending on the configured use case, it relays selected inbound service connections or selected outbound HTTP/HTTPS connections.
+Data Relay Link relays **connections**.
 
-The core security idea is narrow reachability: a connection should exist only because an operator intentionally published or allowed it.
+Depending on the configured use case, it provides:
 
-## Management and policy layer
+- outside → inside access to selected private services;
+- inside → approved Internet HTTP/HTTPS access;
+- local policy and service enforcement around those connections.
 
-**Data Relay Control** provides the centralized operational layer for deployments that need a shared management surface. The exact control APIs, identity model, synchronization behavior, and supported policy objects are documented in the Control product documentation because they evolve independently from Link.
+Link is intentionally narrow: a connection exists because an operator explicitly published or allowed it.
 
-## Standalone vs centrally managed
+## Data Relay Control path
+
+Data Relay Control processes **enterprise events and records**.
+
+The current implementation combines a management/control plane with an active data-delivery runtime:
 
 ```mermaid
 flowchart LR
-    S[Small standalone environment] --> L1[Data Relay Link]
-    M[Multi-site / centrally managed environment] --> C[Data Relay Control]
-    C --> L2[Data Relay Link A]
-    C --> L3[Data Relay Link B]
+    UI[Web UI] --> API[API]
+    API --> DB[(PostgreSQL)]
+    API --> CFG[Connectors / Credentials / Policies]
+    CFG --> RT[Stream Runtime]
+    S[Source] --> RT
+    RT --> R[Routes]
+    R --> D[Destinations]
 ```
 
-A small environment can use Data Relay Link directly. Data Relay Control becomes relevant when centralized visibility, shared policy, or coordinated operations are required.
+A Stream owns execution and checkpoint state. Each Route owns destination-specific processing and delivery.
+
+## They are not a control-plane/data-plane pair today
+
+Earlier platform descriptions implied that Data Relay Control centrally managed Data Relay Link. That is **not supported by the current Control implementation**.
+
+There is currently no implemented product-to-product protocol for:
+
+- Link registration;
+- Link heartbeat/status synchronization;
+- centralized Link policy delivery;
+- Link state synchronization.
+
+Therefore the correct current model is:
+
+```mermaid
+flowchart LR
+    DR[Data Relay product family]
+    DR --> L[Link\nconnection relay]
+    DR --> C[Control\ndata control gateway]
+    L -. no current management protocol .- C
+```
 
 ## Trust boundaries
 
-Operators should think about at least four boundaries:
+The two products have different trust boundaries.
 
-1. **Administrator → Control** — management authentication and authorization.
-2. **Control → Link** — product-to-product management trust.
-3. **External user → published service** — Remote Access exposure and service authentication.
-4. **Restricted host → Internet** — Controlled Egress destination policy and deny behavior.
+**Data Relay Link** focuses on:
 
-Each product's security documentation is authoritative for its own implementation details.
+1. operator/admin → Link management surface;
+2. external user → published private service;
+3. restricted host → approved Internet destination.
+
+**Data Relay Control** focuses on:
+
+1. browser/operator → Control API/UI;
+2. Control runtime → PostgreSQL;
+3. Control runtime → source systems;
+4. Control runtime → destination systems;
+5. credentials and governance stages inside the Stream/Route runtime.
+
+Use each product's security documentation for implementation details.
