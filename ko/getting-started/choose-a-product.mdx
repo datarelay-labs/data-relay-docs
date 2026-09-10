@@ -1,64 +1,44 @@
 ---
 title: "제품 선택"
-description: "필요한 것이 안전한 연결인지, 엔터프라이즈 데이터 흐름 제어인지, 둘 다인지 판단합니다."
+description: "Connectivity가 필요하면 Data Relay Link, Enterprise Data Brokering이 필요하면 Data Relay Control을 선택합니다."
 ---
 
 # 제품 선택
 
-먼저 **무엇을 전달하고 제어해야 하는지**부터 판단하면 됩니다.
+먼저 한 가지를 확인합니다. **무엇을 Relay하려고 합니까?**
 
 ```mermaid
 flowchart TD
-    A[무엇을 이동해야 하는가?]
-    B{Network Connection인가?}
-    C{Enterprise Event / Record인가?}
-    L[Data Relay Link]
-    D[Data Relay Control]
-    BOTH[두 제품을 독립적으로 사용]
-
-    A --> B
-    B -->|예| L
-    B -->|아니오| C
-    C -->|예| D
-    C -->|아니오| A
-    L --> Q{Enterprise 데이터 수집/전달도 필요한가?}
-    Q -->|예| BOTH
-    Q -->|아니오| L
-    D --> R{사설 서비스 연결/Controlled Egress도 필요한가?}
-    R -->|예| BOTH
-    R -->|아니오| D
+    A[무엇을 Relay해야 하나요?]
+    A -->|Network Connection| L[Data Relay Link]
+    A -->|Application Data / Event| C[Data Relay Control]
 ```
 
-## Data Relay Link — 연결 문제가 중심일 때
+## Connectivity가 필요하면 Data Relay Link
 
-**Data Relay Link**는 좁고 명시적인 Connection을 만들어야 할 때 사용합니다.
+다음과 같은 요구사항이면 **Data Relay Link**가 맞습니다.
 
-- NAT/방화벽 뒤의 SSH, HTTP/HTTPS 또는 선택된 TCP 서비스에 접근
-- 각 원격 클라이언트마다 inbound NAT를 구성하지 않고 원격 접속
-- 제한망 호스트가 허용된 HTTP/HTTPS 목적지에만 접근
-- 연결 범위를 명시적으로 제한하고 로컬에서 enforcement
+- 외부 관리자/지원 엔지니어가 내부의 선택된 SSH, Web, RDP, API 등의 서비스에 접속해야 함
+- 폐쇄망/제한망 내부 시스템이 허용된 외부 서비스에만 접속해야 함
+- 보안 업데이트, 패키지 저장소, 라이선스 서버, 승인된 SaaS/API 등의 목적지만 허용해야 함
+- VPN, NAT, 방화벽, Proxy, Squid 설정을 요구사항마다 반복해서 관리하는 부담을 줄이고 싶음
 
 [Data Relay Link 문서로 이동](https://link.datarelay.run)
 
-## Data Relay Control — 엔터프라이즈 데이터 흐름이 중심일 때
+## Data Brokering이 필요하면 Data Relay Control
 
-**Data Relay Control**은 엔터프라이즈 데이터를 수집하고 처리·거버넌스·전달해야 할 때 사용합니다.
+다음과 같은 요구사항이면 **Data Relay Control**이 맞습니다.
 
-- Connector, Credential, Source, Stream, Route, Destination 구성
-- Source event를 fetch하거나 webhook 등으로 수신
-- 하나의 Stream을 여러 Destination으로 Route
-- 목적지별 Transform, Protection, Classification, Policy 적용
-- runtime evidence, delivery outcome, health, audit 모니터링
-- backup/restore 등 lifecycle 운영
+- SaaS, API, Database, File/Log, Device/IoT 등에서 Application Data/Event를 수집해야 함
+- 하나의 Source를 여러 Destination으로 전달해야 함
+- 필요한 Record/Field만 선택해야 함
+- 전달 전에 Transformation이 필요함
+- 민감하거나 불필요한 데이터를 Masking/Removal해야 함
+- SIEM, XDR, Data Lake, SOAR, Analytics, Custom App 등 목적지별로 다른 형태의 데이터가 필요함
+- Data Delivery 상태를 중앙에서 가시화하고 관리하고 싶음
 
 [Data Relay Control 문서로 이동](https://control.datarelay.run)
 
-## 두 제품이 모두 필요한 경우
+## 두 요구사항이 모두 있는 경우
 
-연결 문제와 엔터프라이즈 데이터 흐름 문제가 동시에 있다면 두 제품을 함께 배포할 수 있습니다.
-
-다만 현재는 **서로 독립적인 제품**으로 봐야 합니다. Data Relay Control은 현재 제품 간 관리 프로토콜을 통해 Data Relay Link를 등록·모니터링·설정·동기화하지 않습니다.
-
-<Note>
-  설치 방법, stable/development 릴리스 상태, 보안 경계, 정확한 구현 범위는 Link와 Control 각 전용 문서가 기준입니다.
-</Note>
+두 제품을 각각 독립적으로 사용할 수 있습니다. Link는 Connectivity를, Control은 Data Integration/Delivery를 해결하며 서로 다른 목적과 문서를 갖습니다.

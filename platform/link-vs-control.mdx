@@ -1,52 +1,40 @@
 ---
 title: "Data Relay Link vs Data Relay Control"
-description: "Choose between secure connectivity and enterprise data-flow control."
+description: "Compare the two independent Data Relay products: connection relay versus enterprise data broker."
 ---
 
 # Data Relay Link vs Data Relay Control
 
-The products share the Data Relay name, but they solve different problems.
+The products share the Data Relay name and the idea of **relaying only what is needed**, but they solve different problems at different layers.
 
 | Question | Data Relay Link | Data Relay Control |
 | --- | --- | --- |
-| Main job | Secure connectivity | Enterprise data collection, processing, governance, and delivery |
-| Primary unit | Connection | Event / record |
-| Secure Remote Access | **Yes** | No |
-| Controlled web egress | **Yes** | No |
-| Source data collection | No | **Yes** |
-| Stream / Route execution | No | **Yes** |
-| Transform / Protection / Classification / Policy | No | **Yes** |
-| Multi-destination delivery | No | **Yes** |
-| Local users / RBAC / operational UI | Product-local management | **Yes** |
-| Carries runtime data | Relays connections | **Processes and delivers records** |
-| Can be deployed independently | **Yes** | **Yes** |
-| Centrally manages the other product today | No | **No — Link integration is not implemented** |
+| Main job | Secure, controlled connectivity | Enterprise data collection, processing, and delivery |
+| What it relays | **Network connections** | **Application data and events** |
+| Typical direction | External → internal and internal → approved external | Enterprise sources → one or many destinations |
+| Typical inputs | Remote administrators, private/isolated hosts | SaaS, API, databases, files/logs, devices/IoT |
+| Typical outputs | Selected internal services or approved Internet destinations | SIEM, XDR, Data Lake, SOAR, Analytics, Custom Apps |
+| Main control | Which host/service may connect | Which records/fields go where and in what form |
+| Example functions | Remote access, approved egress, access control, connection logs | Filtering, selection, transformation, masking/removal, protection, route-specific delivery |
+| Main benefit | Safer and simpler restricted-network connectivity | Collect once, reduce duplicate integrations, deliver destination-specific data |
+| Product dependency | None | None |
 | Detailed docs | [link.datarelay.run](https://link.datarelay.run) | [control.datarelay.run](https://control.datarelay.run) |
 
 ## Choose Data Relay Link when
 
-- a private service must be reachable from outside without broad VPN connectivity;
-- a restricted host needs access only to approved Internet destinations;
-- you need selected SSH, HTTP/HTTPS, or other TCP publication;
-- the problem is primarily **network reachability and connection control**.
+- an external administrator/support engineer must reach selected services inside a private or isolated network;
+- a closed/restricted network host needs access only to approved external services;
+- you want to reduce repeated VPN, NAT, firewall, proxy, or Squid configuration changes;
+- the problem is fundamentally **network reachability and connection control**.
 
 ## Choose Data Relay Control when
 
-- enterprise data must be collected from APIs, webhooks, database sources, or other supported connectors;
-- one source flow must be delivered to multiple destinations;
-- destinations need different Transform or governance processing;
-- operators need Streams, Routes, delivery evidence, audit, backup, and policy/governance surfaces;
-- the problem is primarily **data movement, processing, and delivery control**.
+- application data/events must be collected from enterprise sources;
+- one source must feed multiple destinations;
+- different destinations need different filtering, transformation, masking/removal, or protection;
+- you want centralized visibility and management of data delivery;
+- the problem is fundamentally **data integration, processing, and distribution**.
 
-## Use both when both problems exist
-
-An organization may need both products, but that does not currently make them one integrated control hierarchy.
-
-For example:
-
-- **Link** can solve remote/private connectivity requirements for operational systems.
-- **Control** can independently collect and route enterprise data to multiple destinations.
-
-<Warning>
-  Do not design around Data Relay Control centrally managing Data Relay Link today. The current Control implementation does not provide Link registration, heartbeat, policy delivery, or state synchronization.
-</Warning>
+<Note>
+  An organization can use either or both products, but using both does not make them one integrated system. Evaluate and deploy each product for its own problem domain.
+</Note>

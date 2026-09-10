@@ -1,11 +1,11 @@
 ---
 title: "Product Status"
-description: "Understand the independent release and documentation boundaries of Data Relay Link and Data Relay Control."
+description: "Data Relay Link and Data Relay Control are independent products with separate documentation and release boundaries."
 ---
 
 # Product Status
 
-Data Relay Link and Data Relay Control have separate repositories, implementations, and release cycles. This platform portal summarizes their roles but does not replace the dedicated product documentation.
+Data Relay Link and Data Relay Control are **separate products**. This site provides a common introduction and comparison only; the dedicated product sites are authoritative for installation, supported features, limitations, and release status.
 
 ## Data Relay Link
 
@@ -13,14 +13,7 @@ Authoritative documentation:
 
 [https://link.datarelay.run](https://link.datarelay.run)
 
-Use the Link site for:
-
-- current stable release and supported platforms;
-- Secure Remote Access behavior;
-- Controlled Egress qualification/release status;
-- CLI syntax and deployment procedures;
-- lifecycle, diagnostics, backup/restore;
-- security boundaries and known limitations.
+Use the Link documentation for secure remote access, restricted outbound connectivity, service/host allow rules, deployment, operations, and current supported behavior.
 
 ## Data Relay Control
 
@@ -28,23 +21,8 @@ Authoritative documentation:
 
 [https://control.datarelay.run](https://control.datarelay.run)
 
-Use the Control site for:
+Use the Control documentation for connectors, streams, routes, destinations, filtering/selection, transformation, protection, data delivery, governance, monitoring, and current supported behavior.
 
-- Connector, Credential, Source, Stream, Route, and Destination behavior;
-- Transform, Protection, Classification, Policy, Quarantine, and Replay behavior where implemented;
-- runtime delivery, checkpoints, evidence, health, and audit;
-- authentication/RBAC and deployment requirements;
-- Marketplace, safe-change, and other development-branch capabilities;
-- current release status and known limitations.
-
-The current Control documentation distinguishes a **tag-proven `v1.0.0` stable release** from later changelog lineage and a newer audited development branch. Features found only in that development branch are documented as implemented/under validation rather than immutable stable behavior.
-
-## Current Link ↔ Control integration status
-
-<Warning>
-  There is currently no implemented Data Relay Control protocol for Data Relay Link registration, heartbeat, policy delivery, or state synchronization. Do not treat Control as Link's centralized management server unless that capability is implemented and documented in a future release.
-</Warning>
-
-## Platform documentation policy
-
-This site intentionally stays small and balanced. It explains the Data Relay product family and helps you choose the right product. Detailed installation commands, CLI/API references, troubleshooting procedures, security controls, and exact release guarantees stay in each product's dedicated documentation.
+<Note>
+  Sharing the Data Relay name does not imply a runtime dependency or centralized management relationship between Link and Control. Each product should be evaluated from its own documentation.
+</Note>

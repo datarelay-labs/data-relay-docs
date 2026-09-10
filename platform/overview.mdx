@@ -1,86 +1,57 @@
 ---
-title: "Platform Overview"
-description: "Understand the Data Relay product family: secure connectivity with Link and enterprise data-flow control with Control."
+title: "Product Overview"
+description: "Understand the two independent Data Relay products and the different problems they solve."
 ---
 
-# Platform Overview
+# Product Overview
 
-Data Relay is a product family for moving only what is required, with two different scopes:
-
-- move a **connection** with **Data Relay Link**;
-- move and govern **enterprise data** with **Data Relay Control**.
-
-The two products share a product family and a focus on explicit, controlled data movement, but they are not currently one tightly coupled runtime.
-
-## Product family
+Data Relay is the shared name for **two independent products** with a similar design philosophy but different jobs.
 
 ```mermaid
 flowchart LR
-    DR[Data Relay]
-    L[Data Relay Link\nSecure Connectivity]
-    C[Data Relay Control\nEnterprise Data Control Gateway]
-
-    DR --> L
-    DR --> C
+    L[Data Relay Link\nConnection Relay]
+    C[Data Relay Control\nEnterprise Data Broker]
 ```
 
-### Data Relay Link
+There is no dependency implied between them.
 
-Data Relay Link is the connectivity product for private and restricted networks.
+## Data Relay Link
 
-Primary roles:
+Data Relay Link is for **secure bidirectional connectivity in private, isolated, and restricted networks**.
 
-- Secure Remote Access to selected internal services
-- Controlled Egress to approved Internet destinations
-- local connectivity and access-policy enforcement
-- deployment, diagnostics, lifecycle, and backup/restore tooling
-- focused standalone operation for small environments
+It addresses two directions:
 
-Its primary unit is a **connection**.
+- **Outside → inside:** let an administrator or support engineer reach selected internal services such as SSH, web, RDP, or API services.
+- **Inside → outside:** let internal systems reach only approved external services such as security updates, package repositories, license servers, and approved SaaS/API endpoints.
+
+The design goal is to avoid opening entire networks when only a few connections are required. It emphasizes access control, approved-destination control, connection logging/audit, and simpler operation than repeatedly changing VPN, NAT, firewall, proxy, or Squid configurations.
 
 [Open Data Relay Link documentation](https://link.datarelay.run)
 
-### Data Relay Control
+## Data Relay Control
 
-Data Relay Control is an **Enterprise Data Control Gateway**. It actively participates in the data path by collecting or receiving records, processing them, applying optional governance/protection, and delivering them to one or more destinations.
+Data Relay Control is an **Enterprise Data Broker for application data and events**.
 
-Its core runtime model is:
+It collects from sources such as SaaS applications, APIs, databases, files/logs, and devices/IoT, processes the data, and distributes it to destinations such as SIEM, XDR, Data Lake, SOAR, analytics platforms, and custom applications.
 
-```text
-One Stream → Many Routes → Many Destinations
-```
+Its core ideas are:
 
-Current documented capabilities include:
-
-- Connector, Credential, Source, Stream, Route, and Destination management
-- Transform through Mapping/Enrichment
-- optional Protection, Classification, Policy, Quarantine, and Replay
-- destination-specific route processing
-- runtime evidence, audit, health, backup/restore, and maintenance
-- local JWT authentication and RBAC
-- Marketplace and safe-change capabilities on the audited development branch
-
-Its primary unit is an **event or record flowing through a Stream and Route**.
+- collect once and send to many destinations;
+- select only the needed records or fields;
+- transform data before delivery;
+- mask/remove sensitive or unnecessary data;
+- apply destination-specific processing;
+- monitor and manage delivery centrally.
 
 [Open Data Relay Control documentation](https://control.datarelay.run)
 
-## Current relationship between Link and Control
+## Shared idea, different layer
 
-<Warning>
-  Data Relay Control is **not currently the centralized management server for Data Relay Link**. The current Control source does not implement Link registration, heartbeat, Link policy delivery, or Link state synchronization.
-</Warning>
+| | Data Relay Link | Data Relay Control |
+| --- | --- | --- |
+| Works with | Network connections | Application data/events |
+| Main problem | Reachability and access control | Data integration and delivery |
+| Typical flow | Outside ↔ restricted/private network | Sources → broker → destinations |
+| Core principle | Allow only required connections | Deliver only required data in the required form |
 
-For current deployments, treat Link and Control as separate products that solve different problems under the same Data Relay family.
-
-## What the product family is not
-
-The Data Relay name should not be interpreted as automatically providing:
-
-- a full Layer-3 VPN or unrestricted site-to-site routing;
-- a generic enterprise RMM platform;
-- a SASE/SWG replacement;
-- a SIEM, SOAR, or data lake;
-- a centralized Link management protocol that is not yet implemented;
-- high-availability or multi-node behavior unless the individual product documentation explicitly supports it.
-
-Always use the dedicated product documentation as the source of truth for implementation and release status.
+Use the dedicated product documentation for installation, operation, and implementation details.

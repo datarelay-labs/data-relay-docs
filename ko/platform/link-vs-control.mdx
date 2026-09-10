@@ -1,52 +1,40 @@
 ---
 title: "Data Relay Link vs Data Relay Control"
-description: "안전한 연결과 엔터프라이즈 데이터 흐름 제어 중 어떤 제품이 필요한지 비교합니다."
+description: "Connection Relay와 Enterprise Data Broker라는 두 독립 제품의 차이를 비교합니다."
 ---
 
 # Data Relay Link vs Data Relay Control
 
-두 제품은 같은 Data Relay 제품군에 속하지만 해결하는 문제가 다릅니다.
+두 제품은 Data Relay라는 이름과 **필요한 것만 선택적으로 Relay한다**는 생각을 공유하지만, 서로 다른 Layer의 문제를 해결합니다.
 
 | 질문 | Data Relay Link | Data Relay Control |
 | --- | --- | --- |
-| 핵심 역할 | 안전한 연결 | 엔터프라이즈 데이터 수집·처리·거버넌스·전달 |
-| 주요 처리 단위 | Connection | Event / Record |
-| Secure Remote Access | **예** | 아니오 |
-| Controlled web egress | **예** | 아니오 |
-| Source 데이터 수집 | 아니오 | **예** |
-| Stream / Route 실행 | 아니오 | **예** |
-| Transform / Protection / Classification / Policy | 아니오 | **예** |
-| Multi-destination delivery | 아니오 | **예** |
-| 사용자 / RBAC / 운영 UI | 제품 로컬 관리 | **예** |
-| runtime 데이터 처리 | 연결 relay | **Record를 실제 처리하고 전달** |
-| 독립 배포 가능 | **예** | **예** |
-| 현재 상대 제품 중앙관리 | 아니오 | **아니오 — Link 연동 미구현** |
+| 핵심 역할 | 안전하고 통제된 Connectivity | Enterprise Data 수집·처리·전달 |
+| Relay 대상 | **Network Connection** | **Application Data / Event** |
+| 대표 방향 | 외부 → 내부, 내부 → 허용된 외부 | Enterprise Source → 하나 이상의 Destination |
+| 대표 입력 | 원격 관리자, 사설/폐쇄망 Host | SaaS, API, Database, File/Log, Device/IoT |
+| 대표 출력 | 선택된 내부 서비스 또는 허용된 외부 목적지 | SIEM, XDR, Data Lake, SOAR, Analytics, Custom App |
+| 핵심 제어 | 어떤 Host/Service에 연결할 수 있는가 | 어떤 Record/Field를 어디로 어떤 형태로 보낼 것인가 |
+| 대표 기능 | Remote Access, 승인된 Egress, 접근 제어, 접속 기록 | Filtering, Selection, Transformation, Masking/Removal, Protection, Route별 Delivery |
+| 핵심 효과 | 제한망 연결을 더 안전하고 단순하게 | 한 번 수집하고 중복 Integration을 줄이며 목적지별 데이터 전달 |
+| 제품 의존성 | 없음 | 없음 |
 | 상세 문서 | [link.datarelay.run](https://link.datarelay.run) | [control.datarelay.run](https://control.datarelay.run) |
 
-## Data Relay Link가 적합한 경우
+## Data Relay Link가 맞는 경우
 
-- VPN 전체 연결 없이 외부에서 사설 서비스에 접속해야 한다.
-- 제한망 호스트가 허용된 인터넷 목적지에만 접근해야 한다.
-- SSH, HTTP/HTTPS 또는 선택된 TCP 서비스를 제한적으로 공개해야 한다.
-- 핵심 문제가 **network reachability와 connection control**이다.
+- 외부 관리자/지원 엔지니어가 사설망이나 폐쇄망의 선택된 서비스에 접속해야 함
+- 폐쇄망/제한망 Host가 승인된 외부 서비스에만 접속해야 함
+- VPN, NAT, 방화벽, Proxy, Squid 설정 변경을 반복하는 부담을 줄이고 싶음
+- 핵심 문제가 **Network Reachability와 Connection Control**임
 
-## Data Relay Control이 적합한 경우
+## Data Relay Control이 맞는 경우
 
-- API, webhook, database source 또는 지원되는 connector에서 엔터프라이즈 데이터를 수집해야 한다.
-- 하나의 Source 흐름을 여러 Destination으로 전달해야 한다.
-- 목적지마다 서로 다른 Transform 또는 Governance 처리가 필요하다.
-- Stream, Route, delivery evidence, audit, backup, policy/governance 운영이 필요하다.
-- 핵심 문제가 **데이터 이동, 처리, 전달 제어**이다.
+- Enterprise Source에서 Application Data/Event를 수집해야 함
+- 하나의 Source를 여러 Destination으로 보내야 함
+- Destination별로 다른 Filtering, Transformation, Masking/Removal, Protection이 필요함
+- Data Delivery의 Visibility와 Management를 중앙화하고 싶음
+- 핵심 문제가 **Data Integration, Processing, Distribution**임
 
-## 두 문제가 모두 있는 경우
-
-조직에 두 요구사항이 모두 있다면 두 제품을 함께 사용할 수 있습니다. 다만 현재는 하나의 중앙관리 구조로 통합되어 있는 것은 아닙니다.
-
-예를 들어:
-
-- **Link**는 운영 시스템의 사설/제한망 연결 문제를 해결합니다.
-- **Control**은 별도로 엔터프라이즈 데이터를 수집하고 여러 목적지로 처리·전달합니다.
-
-<Warning>
-  현재 Data Relay Control이 Data Relay Link를 중앙관리한다고 가정해서 설계하면 안 됩니다. 현재 Control 구현에는 Link 등록, heartbeat, 정책 배포, 상태 동기화가 없습니다.
-</Warning>
+<Note>
+  두 요구사항이 모두 있으면 두 제품을 각각 사용할 수 있지만, 두 제품을 함께 사용한다고 하나의 통합 시스템이 되는 것은 아닙니다. 각 제품을 자신의 문제 영역에 맞게 독립적으로 평가하고 배포합니다.
+</Note>
