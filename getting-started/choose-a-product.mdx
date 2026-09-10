@@ -1,64 +1,44 @@
 ---
 title: "Choose a Product"
-description: "Decide whether your problem is secure connectivity, enterprise data-flow control, or both."
+description: "Choose Data Relay Link for connectivity or Data Relay Control for enterprise data brokering."
 ---
 
 # Choose a Product
 
-Start with the type of movement you need to control.
+Start with one question: **what are you trying to relay?**
 
 ```mermaid
 flowchart TD
-    A[What needs to move?]
-    B{A network connection?}
-    C{Enterprise events / records?}
-    L[Data Relay Link]
-    D[Data Relay Control]
-    BOTH[Use both independently]
-
-    A --> B
-    B -->|Yes| L
-    B -->|No| C
-    C -->|Yes| D
-    C -->|No| A
-    L --> Q{Do you also need\nenterprise data collection / routing?}
-    Q -->|Yes| BOTH
-    Q -->|No| L
-    D --> R{Do you also need\nprivate-service connectivity / controlled egress?}
-    R -->|Yes| BOTH
-    R -->|No| D
+    A[What needs to be relayed?]
+    A -->|A network connection| L[Data Relay Link]
+    A -->|Application data / events| C[Data Relay Control]
 ```
 
-## Data Relay Link — choose it for connectivity
+## Choose Data Relay Link for connectivity
 
-Use **Data Relay Link** when the requirement is to create a narrowly scoped connection:
+Use **Data Relay Link** when you need controlled network reachability:
 
-- reach SSH, HTTP/HTTPS, or another selected TCP service behind NAT/firewalls;
-- avoid configuring inbound NAT on every remote client;
-- give a restricted host access only to approved HTTP/HTTPS destinations;
-- keep connectivity explicit and locally enforced.
+- external administrator/support access to selected internal SSH, web, RDP, API, or other required services;
+- internal systems in a closed/restricted network reaching only approved external services;
+- approved destinations such as update services, package repositories, license servers, or SaaS/API endpoints;
+- simpler operations than maintaining separate VPN, NAT, firewall, proxy, or Squid changes for each requirement.
 
 [Go to Data Relay Link documentation](https://link.datarelay.run)
 
-## Data Relay Control — choose it for enterprise data flow
+## Choose Data Relay Control for data brokering
 
-Use **Data Relay Control** when the requirement is to collect, process, govern, and deliver enterprise data:
+Use **Data Relay Control** when you need to collect and distribute enterprise application data or events:
 
-- configure Connectors, Credentials, Sources, Streams, Routes, and Destinations;
-- collect or receive source events;
-- route one Stream to multiple destinations;
-- apply destination-specific Transform, Protection, Classification, or Policy;
-- monitor runtime evidence, delivery outcomes, health, and audit;
-- operate backup/restore and other lifecycle functions.
+- collect from SaaS, APIs, databases, files/logs, or devices/IoT;
+- send one source to many destinations;
+- filter/select records and fields;
+- transform data before delivery;
+- mask/remove sensitive or unnecessary data;
+- deliver destination-specific data to SIEM, XDR, Data Lake, SOAR, Analytics, or custom applications;
+- centralize data-delivery visibility and management.
 
 [Go to Data Relay Control documentation](https://control.datarelay.run)
 
-## When you need both
+## If your environment needs both
 
-You can deploy both products when your environment has both connectivity and enterprise data-flow requirements.
-
-However, treat them as **independent products today**. Data Relay Control does not currently register, monitor, configure, or synchronize Data Relay Link instances through a product-to-product management protocol.
-
-<Note>
-  The dedicated Link and Control sites are authoritative for installation steps, stable/development release status, security boundaries, and current implementation details.
-</Note>
+You can use both products independently when you have both connectivity and data-integration requirements. They remain separate products with separate purposes and documentation.
