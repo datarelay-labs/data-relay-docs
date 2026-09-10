@@ -1,51 +1,64 @@
 ---
 title: "Choose a Product"
-description: "Decide whether you need Data Relay Link only or Data Relay Control as well."
+description: "Decide whether your problem is secure connectivity, enterprise data-flow control, or both."
 ---
 
 # Choose a Product
 
-Start with the connectivity problem you are trying to solve.
+Start with the type of movement you need to control.
 
 ```mermaid
 flowchart TD
-    A[What do you need?]
-    B{Reach a private service\nfrom outside?}
-    C{Allow a restricted host\nto reach approved Internet destinations?}
-    D{Need centralized management\nacross Data Relay deployments?}
-    L[Use Data Relay Link]
-    LC[Use Data Relay Link + Data Relay Control]
+    A[What needs to move?]
+    B{A network connection?}
+    C{Enterprise events / records?}
+    L[Data Relay Link]
+    D[Data Relay Control]
+    BOTH[Use both independently]
 
     A --> B
     B -->|Yes| L
     B -->|No| C
-    C -->|Yes| L
-    C -->|No| D
-    D -->|Yes| LC
-    D -->|No| L
-    L --> D
-    D -->|Yes| LC
+    C -->|Yes| D
+    C -->|No| A
+    L --> Q{Do you also need\nenterprise data collection / routing?}
+    Q -->|Yes| BOTH
+    Q -->|No| L
+    D --> R{Do you also need\nprivate-service connectivity / controlled egress?}
+    R -->|Yes| BOTH
+    R -->|No| D
 ```
 
-## Data Relay Link
+## Data Relay Link — choose it for connectivity
 
-Choose **Data Relay Link** when the immediate requirement is connectivity:
+Use **Data Relay Link** when the requirement is to create a narrowly scoped connection:
 
-- publish SSH, HTTP/HTTPS, or another selected TCP service from a private network;
-- avoid inbound NAT configuration on each remote client;
-- provide controlled HTTP/HTTPS egress from a restricted host;
-- manage a small deployment directly.
+- reach SSH, HTTP/HTTPS, or another selected TCP service behind NAT/firewalls;
+- avoid configuring inbound NAT on every remote client;
+- give a restricted host access only to approved HTTP/HTTPS destinations;
+- keep connectivity explicit and locally enforced.
 
 [Go to Data Relay Link documentation](https://link.datarelay.run)
 
-## Data Relay Control
+## Data Relay Control — choose it for enterprise data flow
 
-Add **Data Relay Control** when the environment needs a centralized management and policy layer on top of Data Relay deployments.
+Use **Data Relay Control** when the requirement is to collect, process, govern, and deliver enterprise data:
 
-Use the dedicated Control documentation to confirm the current implemented capabilities before designing a deployment around them.
+- configure Connectors, Credentials, Sources, Streams, Routes, and Destinations;
+- collect or receive source events;
+- route one Stream to multiple destinations;
+- apply destination-specific Transform, Protection, Classification, or Policy;
+- monitor runtime evidence, delivery outcomes, health, and audit;
+- operate backup/restore and other lifecycle functions.
 
 [Go to Data Relay Control documentation](https://control.datarelay.run)
 
-## Typical starting point
+## When you need both
 
-For most small environments, start with **Data Relay Link**. Introduce **Data Relay Control** when central visibility, shared policy, or coordinated administration becomes a real operational requirement.
+You can deploy both products when your environment has both connectivity and enterprise data-flow requirements.
+
+However, treat them as **independent products today**. Data Relay Control does not currently register, monitor, configure, or synchronize Data Relay Link instances through a product-to-product management protocol.
+
+<Note>
+  The dedicated Link and Control sites are authoritative for installation steps, stable/development release status, security boundaries, and current implementation details.
+</Note>
