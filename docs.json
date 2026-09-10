@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Data Relay",
-  "description": "Secure connectivity and enterprise data-flow control with Data Relay Link and Data Relay Control.",
+  "description": "Two independent products under the Data Relay name: Link for controlled bidirectional connectivity and Control for enterprise data brokering and delivery.",
   "colors": {
     "primary": "#16A34A"
   },
