@@ -1,37 +1,52 @@
 ---
 title: "Data Relay Link vs Data Relay Control"
-description: "연결과 중앙 관리/정책 요구사항에 따라 적합한 Data Relay 제품을 선택합니다."
+description: "안전한 연결과 엔터프라이즈 데이터 흐름 제어 중 어떤 제품이 필요한지 비교합니다."
 ---
 
 # Data Relay Link vs Data Relay Control
 
-두 제품은 서로 대체하는 제품이 아니라 역할이 다른 보완 제품입니다.
+두 제품은 같은 Data Relay 제품군에 속하지만 해결하는 문제가 다릅니다.
 
 | 질문 | Data Relay Link | Data Relay Control |
 | --- | --- | --- |
-| 주요 역할 | 연결 및 로컬 enforcement | 중앙 관리 및 정책 |
-| 단독 사용 가능? | **예** | 관리 대상 Data Relay 환경과 함께 사용 |
-| Secure Remote Access | **예** | 지원 범위에서 관련 정책/가시성 관리 |
-| Controlled Egress | **예** | 지원 범위에서 관련 정책/가시성 관리 |
-| 애플리케이션 트래픽 전달 | **예** | 주 역할이 아님 |
-| 적합한 환경 | 소규모 독립 또는 사이트 단위 연결 | 여러 Data Relay 배포의 중앙 관리 |
+| 핵심 역할 | 안전한 연결 | 엔터프라이즈 데이터 수집·처리·거버넌스·전달 |
+| 주요 처리 단위 | Connection | Event / Record |
+| Secure Remote Access | **예** | 아니오 |
+| Controlled web egress | **예** | 아니오 |
+| Source 데이터 수집 | 아니오 | **예** |
+| Stream / Route 실행 | 아니오 | **예** |
+| Transform / Protection / Classification / Policy | 아니오 | **예** |
+| Multi-destination delivery | 아니오 | **예** |
+| 사용자 / RBAC / 운영 UI | 제품 로컬 관리 | **예** |
+| runtime 데이터 처리 | 연결 relay | **Record를 실제 처리하고 전달** |
+| 독립 배포 가능 | **예** | **예** |
+| 현재 상대 제품 중앙관리 | 아니오 | **아니오 — Link 연동 미구현** |
 | 상세 문서 | [link.datarelay.run](https://link.datarelay.run) | [control.datarelay.run](https://control.datarelay.run) |
 
-## Link만 사용하면 되는 경우
+## Data Relay Link가 적합한 경우
 
-- 한 사이트 또는 소수 시스템을 관리한다.
-- Secure Remote Access가 필요하다.
-- 제한된 outbound Internet access가 필요하다.
-- 로컬 CLI와 정책 운영으로 충분하다.
-- 별도의 중앙 관리 계층이 필요하지 않다.
+- VPN 전체 연결 없이 외부에서 사설 서비스에 접속해야 한다.
+- 제한망 호스트가 허용된 인터넷 목적지에만 접근해야 한다.
+- SSH, HTTP/HTTPS 또는 선택된 TCP 서비스를 제한적으로 공개해야 한다.
+- 핵심 문제가 **network reachability와 connection control**이다.
 
-## Control을 추가할 경우
+## Data Relay Control이 적합한 경우
 
-- 여러 Data Relay 환경을 한 화면에서 관리해야 한다.
-- 정책을 중앙에서 관리해야 한다.
-- 중앙 운영 가시성이 필요하다.
-- 각 Link를 개별 운영하는 대신 공통 관리 계층이 필요하다.
+- API, webhook, database source 또는 지원되는 connector에서 엔터프라이즈 데이터를 수집해야 한다.
+- 하나의 Source 흐름을 여러 Destination으로 전달해야 한다.
+- 목적지마다 서로 다른 Transform 또는 Governance 처리가 필요하다.
+- Stream, Route, delivery evidence, audit, backup, policy/governance 운영이 필요하다.
+- 핵심 문제가 **데이터 이동, 처리, 전달 제어**이다.
 
-<Note>
-  Data Relay Control의 실제 구현 및 릴리스 상태는 별도 Control 문서가 기준입니다. 이 통합 포털에서는 확인되지 않은 Control 기능을 지원한다고 가정하지 않습니다.
-</Note>
+## 두 문제가 모두 있는 경우
+
+조직에 두 요구사항이 모두 있다면 두 제품을 함께 사용할 수 있습니다. 다만 현재는 하나의 중앙관리 구조로 통합되어 있는 것은 아닙니다.
+
+예를 들어:
+
+- **Link**는 운영 시스템의 사설/제한망 연결 문제를 해결합니다.
+- **Control**은 별도로 엔터프라이즈 데이터를 수집하고 여러 목적지로 처리·전달합니다.
+
+<Warning>
+  현재 Data Relay Control이 Data Relay Link를 중앙관리한다고 가정해서 설계하면 안 됩니다. 현재 Control 구현에는 Link 등록, heartbeat, 정책 배포, 상태 동기화가 없습니다.
+</Warning>
